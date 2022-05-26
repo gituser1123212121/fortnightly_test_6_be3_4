@@ -6,9 +6,12 @@ const {
 } = require("../controllers/chatController");
 const router = express.Router();
 
-router.post("/send", sendMessageToSingleUser);
+const { checkToken } = require("../middlewares");
+
+router.post("/send", [checkToken], sendMessageToSingleUser);
 router.get(
   "/messages/:userId/sender/:senderUserId",
+  [checkToken],
   getMessagesFromSpecificUser
 );
 

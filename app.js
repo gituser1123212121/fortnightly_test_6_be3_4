@@ -81,10 +81,10 @@ db.sequelize
   });
 
 //Routes
-app.use("/api/chat/v1/ping", require("./routes/ping"));
-app.use("/api/chat/v1/auth", require("./routes/auth"));
-app.use("/api/chat/v1/msg", require("./routes/chat"));
-app.use("/api/chat/v1/grp", require("./routes/group"));
+app.use("/api/chat/v1/ping", require("./routes/ping.route"));
+app.use("/api/chat/v1/auth", require("./routes/auth.route"));
+app.use("/api/chat/v1/msg", require("./routes/chat.route"));
+app.use("/api/chat/v1/grp", require("./routes/group.route"));
 
 const PORT = process.env.PORT || 3000;
 

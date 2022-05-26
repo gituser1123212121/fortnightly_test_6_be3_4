@@ -7,7 +7,13 @@ const {
   getMessagesFromGroup,
 } = require("../controllers/chatController");
 
-router.post("/group", createGroup);
-router.post("/group/send", sendMessageToGroup);
-router.get("/messages/:userId/group/:groupId", getMessagesFromGroup);
+const { checkToken } = require("../middlewares");
+
+router.post("/group", [checkToken], createGroup);
+router.post("/group/send", [checkToken], sendMessageToGroup);
+router.get(
+  "/messages/:userId/group/:groupId",
+  [checkToken],
+  getMessagesFromGroup
+);
 module.exports = router;
