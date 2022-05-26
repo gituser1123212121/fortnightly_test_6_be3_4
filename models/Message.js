@@ -1,23 +1,22 @@
 module.exports = (sequelize, Sequelize) => {
   const DataTypes = Sequelize.DataTypes;
-  const User = sequelize.define("User", {
+  const Message = sequelize.define("Message", {
     userId: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+      allowNull: false,
     },
-    username: {
+    senderUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    message: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
+    sentOn: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   });
-  return User;
+  return Message;
 };
