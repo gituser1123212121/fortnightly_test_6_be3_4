@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 
 const app = express();
 const dotenv = require("dotenv");
-const Message = require("./models").message;
 dotenv.config();
 
 //BodyParsing
@@ -12,6 +11,8 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 const User = require("./models").user;
+const Message = require("./models").message;
+const Group = require("./models").group;
 
 db.sequelize
   .sync({ force: true })
@@ -32,20 +33,46 @@ db.sequelize
       });
     });
 
+    // create single user messages
     Message.create({
       userId: 1,
       senderUserId: 2,
       message: "This is from 2 to 1",
       sentOn: Date.now(),
+      isGroupMessage: false,
     }).then((msg1) => {
       Message.create({
         userId: 2,
         senderUserId: 1,
         message: "This is from 1 to 2",
         sentOn: Date.now(),
+        isGroupMessage: false,
       }).then((msg2) => {
         console.log("initial messages created");
       });
+    });
+
+    // create group messages
+    Message.create({
+      userId: 1,
+      senderUserId: 2,
+      message: "This is from 2 to group 1",
+      sentOn: Date.now(),
+      isGroupMessage: true,
+    }).then((grpMsg1) => {
+      Message.create({
+        userId: 1,
+        senderUserId: 1,
+        message: "This is from 1 to group 1",
+        sentOn: Date.now(),
+        isGroupMessage: true,
+      }).then((grpMsg2) => {
+        console.log(`initial group messages created`);
+      });
+    });
+
+    Group.create({ userId: 1, groupId: 1 }).then((grp) => {
+      console.log("initial group created successfully");
     });
   })
   .catch((err) => {

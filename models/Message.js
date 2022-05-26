@@ -17,6 +17,10 @@ module.exports = (sequelize, Sequelize) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
+    isGroupMessage: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   });
   return Message;
 };
