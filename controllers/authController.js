@@ -6,7 +6,7 @@ const registerUser = (req, res, next) => {
   const userObj = {
     username: req.body.username,
     email: req.body.email,
-    password: hashSync(req.body.password, 10),
+    password: hashSync(req.body.password),
   };
   User.findOne({ email: userObj.email })
     .then((user) => {
@@ -27,19 +27,22 @@ const registerUser = (req, res, next) => {
     });
 };
 
-const loginUser = (req, res, next) => {
+const loginUser = async (req, res, next) => {
   const loginObj = { email: req.body.email, password: req.body.password };
   User.findOne({ email: loginObj.email }).then((user) => {
     if (user) {
       // user exists
-      // chek for password
-      if (compareSync(loginObj.password, user.password) === true) {
+      // check for password
+      console.log(compareSync(loginObj.password, user.password));
+      if (compareSync(loginObj.password, user.password)) {
         let token = jwt.sign({ userId: user.userId }, "mysecretkey");
         // login success
-        res.status(200).send({
+        res.status(200).json({
           message: `login success for ${loginObj.email}`,
           token: token,
         });
+      } else {
+        res.status(400).json({ message: `invalid credentials for user` });
       }
     } else {
       res
@@ -52,7 +55,6 @@ const loginUser = (req, res, next) => {
 const getAllUsers = async (req, res, next) => {
   await User.findAll().then((users) => {
     let formattedUsers = [];
-    console.log(users);
     users.forEach((user, idx) => {
       formattedUsers.push({
         userId: user.userId,

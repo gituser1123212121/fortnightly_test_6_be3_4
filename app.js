@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 const User = require("./models").user;
 const Message = require("./models").message;
 const Group = require("./models").group;
+const { hashSync } = require("bcryptjs");
 
 db.sequelize
   .sync({ force: true })
@@ -21,12 +22,12 @@ db.sequelize
     User.create({
       username: "user1",
       email: "user1@yahoo.com",
-      password: "12345678",
+      password: hashSync("12345678"),
     }).then((user1) => {
       User.create({
         username: "user2",
         email: "user2@yahoo.com",
-        password: "12345678",
+        password: hashSync("12345678"),
       }).then((user2) => {
         console.log(`initial users created`);
         console.log("tables dropped and recreated");
