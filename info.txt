@@ -1,0 +1,48 @@
+Round 3:
+
+Build a static chat application i.e. it wont be real time. (API calls to contact/communicate with the server)
+User will first have to register himself
+
+
+[SINGLE USER CHAT]
+POST /register/ -> to register user
+POST /send -> to send msg to another user (from one user to another user) [SEND]
+GET /messages/:userId/sender/:senderUserId -> get all msgs received from a senderUserId
+    /messages/2/sender/1
+(URL PARAMS)
+A -> B (500 messages)
+1    2
+GET /users/all -> list of all userId and userName
+
+
+Enhancement:
+Add a feature to create group (send messages to a lot of people at once)
+POST /group/ -> create a group. Will accept list of userIds (in the request body, you send userId)
+POST /group/send -> send msg in group (everyone in the group will get the message)
+GET /messages/:userId/group/:groupId -> get all msgs received from group for user with userId
+userId:    1
+Group - 1(3) (A, B, C, D)
+                 2  5  6
+    /messages/1/group/3
+
+
+Models for reference(You may need to add/remove columns as per usecase, 
+you may choose to use your own schema design as per your convenience)
+
+User -> userID, userName
+Message -> userId, senderUserId, message, sentOn
+
+(keep track of which user is in which group)
+Group -> groupId, userId  (one row for each user)
+{
+    userId     groupId
+    1          2
+    2          2
+    3          2
+
+    1 -> (1, 2)
+    2 -> (1, 3)
+}
+
+GroupMessage -> (groupId, senderUserId) and you can choose to store message in Message table and set senderUserId as groupId
+GroupMessage -> Message (you can query by groupID and join on groupId(GroupMessage)->senderUserId(Message))

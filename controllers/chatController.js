@@ -14,10 +14,22 @@ const sendMessageToSingleUser = async (req, res, next) => {
   // verify if both users are valid
   let sender = null,
     receiver = null;
-  await User.findOne({ userId: chatObj.senderUserId }).then((_sender) => {
+  await User.findOne({
+    where: {
+      userId: {
+        [Op.eq]: chatObj.senderUserId,
+      },
+    },
+  }).then((_sender) => {
     sender = _sender;
   });
-  await User.findOne({ userId: chatObj.userId }).then((_receiver) => {
+  await User.findOne({
+    where: {
+      userId: {
+        [Op.eq]: chatObj.userId,
+      },
+    },
+  }).then((_receiver) => {
     receiver = _receiver;
   });
 

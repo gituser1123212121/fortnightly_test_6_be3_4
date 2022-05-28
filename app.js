@@ -1,20 +1,27 @@
 const express = require("express");
+// setting up the database
 const db = require("./models");
+// parsing the request body
 const bodyParser = require("body-parser");
 
 const app = express();
+// .env files
 const dotenv = require("dotenv");
 dotenv.config();
 
 //BodyParsing
+// to be able to parse the json body
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
+// importing some models
 const User = require("./models").user;
 const Message = require("./models").message;
 const Group = require("./models").group;
 const { hashSync } = require("bcryptjs");
 
+// first initialiaze the db on every run
+// sync() -> drop the tables and create them again
 db.sequelize
   .sync({ force: true })
   .then(() => {
@@ -80,7 +87,7 @@ db.sequelize
     console.log(err.message);
   });
 
-//Routes
+//Routes for the API
 app.use("/api/chat/v1/ping", require("./routes/ping.route"));
 app.use("/api/chat/v1/auth", require("./routes/auth.route"));
 app.use("/api/chat/v1/msg", require("./routes/chat.route"));

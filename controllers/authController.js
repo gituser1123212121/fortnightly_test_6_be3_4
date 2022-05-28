@@ -1,6 +1,7 @@
 const User = require("../models").user;
 const { hashSync, compareSync } = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 
 const registerUser = (req, res, next) => {
   const userObj = {
@@ -8,7 +9,7 @@ const registerUser = (req, res, next) => {
     email: req.body.email,
     password: hashSync(req.body.password),
   };
-  User.findOne({ email: userObj.email })
+  User.findOne({ where: { email: { [Op.eq]: userObj.email } } })
     .then((user) => {
       if (!user) {
         User.create(userObj).then(() => {
@@ -29,11 +30,13 @@ const registerUser = (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   const loginObj = { email: req.body.email, password: req.body.password };
-  User.findOne({ email: loginObj.email }).then((user) => {
+  User.findOne({
+    where: { email: { [Op.eq]: loginObj.email } },
+  }).then((user) => {
     if (user) {
+      console.log(user);
       // user exists
       // check for password
-      console.log(compareSync(loginObj.password, user.password));
       if (compareSync(loginObj.password, user.password)) {
         let token = jwt.sign({ userId: user.userId }, "mysecretkey");
         // login success
