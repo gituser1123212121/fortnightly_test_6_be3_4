@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+// group related API endpoints
 const { createGroup } = require("../controllers/groupController");
 const {
   sendMessageToGroup,

@@ -1,5 +1,6 @@
 const express = require("express");
 
+// chat related API endpoints
 const {
   sendMessageToSingleUser,
   getMessagesFromSpecificUser,

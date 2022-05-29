@@ -3,7 +3,13 @@ const Message = require("../models").message;
 const { Op } = require("sequelize");
 const Group = require("../models").group;
 
+// create a new message object, that represents a message from one \
+// user to the other
 const sendMessageToSingleUser = async (req, res, next) => {
+  // the receiver
+  // the sender
+  // the message
+  // isGroupMessage: false
   const chatObj = {
     userId: req.body.userId,
     senderUserId: req.body.senderUserId,
@@ -12,8 +18,12 @@ const sendMessageToSingleUser = async (req, res, next) => {
     sentOn: Date.now(),
   };
   // verify if both users are valid
+  // create two
   let sender = null,
     receiver = null;
+  // check if the sender exists in our database
+  // Op.eq
+  // make sure both values are found from database
   await User.findOne({
     where: {
       userId: {
@@ -21,8 +31,11 @@ const sendMessageToSingleUser = async (req, res, next) => {
       },
     },
   }).then((_sender) => {
+    // _sender -> response from database
+    // sender is our variable
     sender = _sender;
   });
+  // check if the receiver exists in our database
   await User.findOne({
     where: {
       userId: {
@@ -33,9 +46,12 @@ const sendMessageToSingleUser = async (req, res, next) => {
     receiver = _receiver;
   });
 
+  // needs
   if (sender && receiver) {
+    // users are valid
     // message can be sent
-    Message.create(chatObj)
+    // create a row in your database
+    await Message.create(chatObj)
       .then((msg) => {
         res.status(200).json({ message: `message sent successfully` });
       })
@@ -44,13 +60,16 @@ const sendMessageToSingleUser = async (req, res, next) => {
           message: `internal server error: ${err}`,
         });
       });
+  } else {
+    res.status(404).json({ message: "user not exists" });
   }
 };
 
+// get all the messages sent from one user to the other
 const getMessagesFromSpecificUser = async (req, res, next) => {
   const userId = req.params.userId;
   const senderUserId = req.params.senderUserId;
-  Message.findAll({
+  await Message.findAll({
     where: {
       userId: { [Op.eq]: userId },
       senderUserId: { [Op.eq]: senderUserId },
@@ -76,6 +95,7 @@ const getMessagesFromSpecificUser = async (req, res, next) => {
     });
 };
 
+// create a new message object that represents a group message
 const sendMessageToGroup = async (req, res, next) => {
   // create Message and GroupMessage instance
   const groupChatObj = {
@@ -86,7 +106,7 @@ const sendMessageToGroup = async (req, res, next) => {
     sentOn: Date.now(),
   };
 
-  Group.findOne({
+  await Group.findOne({
     where: { groupId: { [Op.eq]: groupChatObj.userId } },
   }).then((group) => {
     if (group) {
@@ -107,11 +127,12 @@ const sendMessageToGroup = async (req, res, next) => {
   });
 };
 
+// get all the messages from a group that the user is a part of
 const getMessagesFromGroup = async (req, res, next) => {
   const userId = req.params.userId;
   const groupId = req.params.groupId;
 
-  Message.findAll({
+  await Message.findAll({
     where: {
       userId: { [Op.eq]: groupId },
       isGroupMessage: { [Op.eq]: true },

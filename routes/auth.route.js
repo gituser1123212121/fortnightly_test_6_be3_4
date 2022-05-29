@@ -1,5 +1,6 @@
 const express = require("express");
 
+// authentication related API endpoints
 const {
   loginUser,
   registerUser,

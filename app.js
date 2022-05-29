@@ -79,6 +79,7 @@ db.sequelize
       });
     });
 
+    // Add user1 to group1
     Group.create({ userId: 1, groupId: 1 }).then((grp) => {
       console.log("initial group created successfully");
     });

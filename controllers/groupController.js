@@ -1,5 +1,6 @@
 const Group = require("../models").group;
 
+// create a new group row
 const createGroup = async (req, res, next) => {
   try {
     let usersList = req.body.users;

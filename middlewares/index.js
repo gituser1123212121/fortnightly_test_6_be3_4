@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 
+// middleware to check for token in request header
 const checkToken = (req, res, next) => {
   // token is not sent
   if (!req.headers.authorization) {
